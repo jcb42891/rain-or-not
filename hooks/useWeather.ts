@@ -10,7 +10,11 @@ interface WeatherData {
   error: string | null;
 }
 
-export function useWeather(latitude: number | null, longitude: number | null) {
+export function useWeather(
+  latitude: number | null, 
+  longitude: number | null,
+  zipCode?: string
+) {
   const [weatherData, setWeatherData] = useState<WeatherData>({
     isRaining: false,
     condition: '',
@@ -20,12 +24,22 @@ export function useWeather(latitude: number | null, longitude: number | null) {
   });
 
   useEffect(() => {
-    if (!latitude || !longitude) return;
-
     const fetchWeather = async () => {
       try {
+        // Determine query parameter based on available data
+        const query = zipCode ? zipCode : (latitude && longitude) ? `${latitude},${longitude}` : null;
+        
+        if (!query) {
+          setWeatherData(prev => ({
+            ...prev,
+            loading: false,
+            error: 'No location data available',
+          }));
+          return;
+        }
+
         const response = await fetch(
-          `https://api.weatherapi.com/v1/current.json?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${latitude},${longitude}`
+          `https://api.weatherapi.com/v1/current.json?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${query}`
         );
 
         if (!response.ok) {
@@ -63,7 +77,7 @@ export function useWeather(latitude: number | null, longitude: number | null) {
     };
 
     fetchWeather();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, zipCode]);
 
   return weatherData;
 } 
