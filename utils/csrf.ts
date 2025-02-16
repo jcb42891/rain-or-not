@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const CSRF_COOKIE_NAME = 'csrf_token';
 const CSRF_HEADER_NAME = 'x-csrf-token';
@@ -12,13 +12,16 @@ export async function generateToken(): Promise<string> {
 
 export async function setCSRFCookie() {
   const token = await generateToken();
-  cookies().set(CSRF_COOKIE_NAME, token, {
+  const response = NextResponse.next();
+  response.cookies.set({
+    name: CSRF_COOKIE_NAME,
+    value: token,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     path: '/',
   });
-  return token;
+  return { token, response };
 }
 
 export function validateCSRFToken(request: NextRequest): boolean {

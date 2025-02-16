@@ -2,12 +2,30 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { validateCSRFToken } from '@/utils/csrf'
 
+// Define types for rate limiting
+type TimeStamp = number
+type RateLimitMap = Map<string, TimeStamp[]>
+
 // Simple rate limiting map
-const rateLimit = new Map()
+const rateLimit: RateLimitMap = new Map()
 
 // Rate limit configuration
 const RATE_LIMIT_DURATION = 60 * 1000 // 1 minute
 const MAX_REQUESTS = 10 // requests per minute
+
+function getIP(request: NextRequest) {
+  // Get IP from various headers
+  const xff = request.headers.get('x-forwarded-for')
+  const realIP = request.headers.get('x-real-ip')
+  
+  if (xff) {
+    return xff.split(',')[0].trim()
+  }
+  if (realIP) {
+    return realIP
+  }
+  return '127.0.0.1'
+}
 
 export async function middleware(request: NextRequest) {
   // Only apply to weather API route
@@ -30,10 +48,10 @@ export async function middleware(request: NextRequest) {
     }
 
     // Rate limiting
-    const ip = request.ip || '127.0.0.1'
+    const ip = getIP(request)
     const now = Date.now()
     const userRequests = rateLimit.get(ip) || []
-    const recentRequests = userRequests.filter(time => now - time < RATE_LIMIT_DURATION)
+    const recentRequests = userRequests.filter((time: TimeStamp) => now - time < RATE_LIMIT_DURATION)
 
     if (recentRequests.length >= MAX_REQUESTS) {
       return NextResponse.json(
