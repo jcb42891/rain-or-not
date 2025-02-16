@@ -29,7 +29,13 @@ function getIP(request: NextRequest) {
 
 function isValidOrigin(request: NextRequest): boolean {
   const origin = request.headers.get('origin')
-  if (!origin) return false
+  
+  // Allow requests without origin header in production
+  // This handles direct API calls from the same domain
+  if (!origin) {
+    const host = request.headers.get('host')
+    return host === 'rainornot.com' || host === 'localhost:3000'
+  }
 
   const allowedOrigins = [
     'http://localhost:3000',
