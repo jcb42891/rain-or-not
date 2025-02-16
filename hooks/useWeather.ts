@@ -26,10 +26,8 @@ export function useWeather(
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Determine query parameter based on available data
-        const query = zipCode ? zipCode : (latitude && longitude) ? `${latitude},${longitude}` : null;
-        
-        if (!query) {
+        // Only fetch if we have location data or zip code
+        if (!latitude && !longitude && !zipCode) {
           setWeatherData(prev => ({
             ...prev,
             loading: false,
@@ -38,9 +36,17 @@ export function useWeather(
           return;
         }
 
-        const response = await fetch(
-          `https://api.weatherapi.com/v1/current.json?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${query}`
-        );
+        const response = await fetch('/api/weather', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            latitude,
+            longitude,
+            zipCode
+          }),
+        });
 
         if (!response.ok) {
           throw new Error('Weather data fetch failed');
