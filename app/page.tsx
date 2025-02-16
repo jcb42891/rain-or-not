@@ -7,6 +7,7 @@ import { Accordion } from "@/components/Accordion";
 import Image from "next/image";
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { Globe2 } from 'lucide-react';
+import { getRandomQuote } from "@/utils/quotes";
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -69,6 +70,15 @@ export default function Home() {
   // State for accordion
   const [isOpen, setIsOpen] = useState(false);
 
+  const [randomQuote, setRandomQuote] = useState(getRandomQuote());
+
+  // Update quote when weather changes
+  useEffect(() => {
+    if (isRaining) {
+      setRandomQuote(getRandomQuote());
+    }
+  }, [isRaining]);
+
   return (
     <main 
       className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8"
@@ -123,6 +133,17 @@ export default function Home() {
             )}
           </div>
         </div>
+
+        {/* Rain Quote - only shown when raining */}
+        {isRaining && !error && !loading && (
+          <div className="max-w-md mx-auto">
+            <blockquote className="italic text-muted bg-white/20 border border-card-border 
+                                  rounded-lg p-6 shadow-sm backdrop-blur-sm">
+              <p className="text-lg">"{randomQuote.text}"</p>
+              <footer className="mt-2 text-sm">— {randomQuote.author}</footer>
+            </blockquote>
+          </div>
+        )}
 
         {/* Location info with globe emoji */}
         <p className="text-sm text-muted flex items-center justify-center gap-2">
