@@ -1,4 +1,9 @@
-export const rainQuotes = [
+interface Quote {
+  text: string;
+  author: string;
+}
+
+export const rainQuotes: Quote[] = [
   {
     text: "Some people feel the rain. Others just get wet.",
     author: "Bob Marley"
@@ -81,6 +86,90 @@ export const rainQuotes = [
   }
 ];
 
-export const getRandomQuote = () => {
-  return rainQuotes[Math.floor(Math.random() * rainQuotes.length)];
+export const sunQuotes: Quote[] = [
+  {
+    text: "Keep your face always toward the sunshine—and shadows will fall behind you.",
+    author: "Walt Whitman"
+  },
+  {
+    text: "A day without sunshine is like, you know, night.",
+    author: "Steve Martin"
+  },
+  {
+    text: "To love and be loved is to feel the sun from both sides.",
+    author: "David Viscott"
+  },
+  {
+    text: "Live in the sunshine, swim in the sea, drink the wild air.",
+    author: "Ralph Waldo Emerson"
+  },
+  {
+    text: "Some people are so much sunshine to the square inch.",
+    author: "Walt Whitman"
+  },
+  {
+    text: "If you spend your whole life waiting for the storm, you'll never enjoy the sunshine.",
+    author: "Morris West"
+  },
+  {
+    text: "Sunshine is delicious, rain is refreshing, wind braces us up, snow is exhilarating; there is really no such thing as bad weather, only different kinds of good weather.",
+    author: "John Ruskin"
+  },
+  {
+    text: "Even on a cloudy day, the sun is still shining somewhere.",
+    author: "Unknown"
+  },
+  {
+    text: "He that will enjoy the brightness of sunshine, must quit the coolness of the shade.",
+    author: "Samuel Johnson"
+  },
+  {
+    text: "A sunny disposition is worth more than a fortune.",
+    author: "Andrew Carnegie"
+  },
+  {
+    text: "Sunshine is a welcome thing. It brings a lot of brightness.",
+    author: "Jimmie Davis"
+  },
+  {
+    text: "If you want to shine like the sun, first burn like the sun.",
+    author: "A.P.J. Abdul Kalam"
+  },
+  {
+    text: "There is no such thing as too much sunshine, but plenty of people miss it by staying in the shade.",
+    author: "Unknown"
+  },
+  {
+    text: "Laughter is the sun that drives winter from the human face.",
+    author: "Victor Hugo"
+  },
+  {
+    text: "When the sun is shining, I can do anything; no mountain is too high, no trouble too difficult to overcome.",
+    author: "Wilma Rudolph"
+  },
+  {
+    text: "Rise above the storm and you will find the sunshine.",
+    author: "Mario Fernández"
+  },
+  {
+    text: "Sunlight is painting.",
+    author: "Nathaniel Hawthorne"
+  },
+  {
+    text: "Bring sunshine into the place you enter.",
+    author: "Latin Proverb"
+  },
+  {
+    text: "Look at the sunny side of everything.",
+    author: "Christian D. Larson"
+  },
+  {
+    text: "Nothing can dim the light that shines from within.",
+    author: "Maya Angelou"
+  }
+];
+
+export const getRandomQuote = (isRaining: boolean) => {
+  const quotes = isRaining ? rainQuotes : sunQuotes;
+  return quotes[Math.floor(Math.random() * quotes.length)];
 }; 

@@ -70,13 +70,11 @@ export default function Home() {
   // State for accordion
   const [isOpen, setIsOpen] = useState(false);
 
-  const [randomQuote, setRandomQuote] = useState(getRandomQuote());
+  const [randomQuote, setRandomQuote] = useState(getRandomQuote(isRaining));
 
   // Update quote when weather changes
   useEffect(() => {
-    if (isRaining) {
-      setRandomQuote(getRandomQuote());
-    }
+    setRandomQuote(getRandomQuote(isRaining));
   }, [isRaining]);
 
   return (
@@ -134,8 +132,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Rain Quote - only shown when raining */}
-        {isRaining && !error && !loading && (
+        {/* Weather Quote - shown for both conditions */}
+        {!error && !loading && (
           <div className="max-w-md mx-auto">
             <blockquote className="italic text-muted bg-white/20 border border-card-border 
                                   rounded-lg p-6 shadow-sm backdrop-blur-sm">
