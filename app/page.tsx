@@ -7,6 +7,8 @@ import { Accordion } from "@/components/Accordion";
 import Image from "next/image";
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { getRandomQuote } from "@/utils/quotes";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { useMinimumLoadingTime } from "@/hooks/useMinimumLoadingTime";
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -16,11 +18,12 @@ export default function Home() {
   const { isRaining, condition, location, error: weatherError, loading: weatherLoading } = 
     useWeather(latitude, longitude, activeZipCode);
 
-  const loading = locationLoading || weatherLoading;
+  const actualLoading = locationLoading || weatherLoading;
+  const loading = useMinimumLoadingTime(actualLoading);
   const error = locationError || weatherError;
 
-  // Add weather theme handling
-  const weatherTheme = isRaining ? 'rainy' : 'sunny';
+  // Add weather theme handling with loading state
+  const weatherTheme = loading ? 'loading' : isRaining ? 'rainy' : 'sunny';
 
   // Add effect to update document theme
   useEffect(() => {
@@ -81,8 +84,8 @@ export default function Home() {
       className="min-h-screen flex flex-col items-center p-4 sm:p-8"
       data-weather={weatherTheme}
     >
-      {/* Audio player moved to top with constrained width */}
-      <div className="w-fit mb-8">
+      {/* Audio player at top */}
+      <div className="w-fit">
         <AudioPlayer isRaining={isRaining} />
       </div>
 
@@ -92,111 +95,100 @@ export default function Home() {
             Is it raining?
           </h1>
           
-          {/* Weather display with image */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-            {/* Weather character image */}
-            <div className="relative w-48 h-48 sm:w-80 sm:h-80">
-              {isRaining ? (
-                <Image
-                  src="/rain-cloud.png"
-                  alt="Rain cloud character"
-                  width={320}
-                  height={320}
-                  className="object-contain"
-                  priority
-                />
-              ) : (
-                <Image
-                  src="/sun.png"
-                  alt="Sun character"
-                  width={320}
-                  height={320}
-                  className="object-contain"
-                  priority
-                />
-              )}
+          {loading ? (
+            <div className="flex justify-center py-8">
+              <LoadingSpinner />
             </div>
-
-            {/* Weather display - circular */}
-            <div className="weather-display aspect-square w-48 sm:w-64 rounded-full bg-card shadow-lg 
-                          flex flex-col items-center justify-center p-4 sm:p-8">
-              {loading ? (
-                <p className="text-xl sm:text-2xl">Checking the weather...</p>
-              ) : error ? (
-                getErrorMessage()
-              ) : (
-                <div className="space-y-2 sm:space-y-4 text-center">
-                  <p className="text-4xl sm:text-6xl font-bold">
-                    {isRaining ? 'YES!' : 'Nope'}
-                  </p>
-                  <p className="text-base sm:text-xl text-muted">
-                    Current conditions: {condition}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Weather Quote - shown for both conditions */}
-          {!error && !loading && (
-            <div className="max-w-md mx-auto">
-              <blockquote className="italic text-muted bg-white/20 border border-card-border 
-                                    rounded-lg p-6 shadow-sm backdrop-blur-sm">
-                <p className="text-lg">&ldquo;{randomQuote.text}&rdquo;</p>
-                <footer className="mt-2 text-sm">— {randomQuote.author}</footer>
-              </blockquote>
-            </div>
-          )}
-
-          {/* Location info with globe emoji */}
-          <p className="text-sm text-muted flex items-center justify-center gap-2">
-            <span role="img" aria-label="globe">🌍</span>
-            {loading ? (
-              "Getting weather data..."
-            ) : error ? (
-              "Please enter a location"
-            ) : (
-              `${location}`
-            )}
-          </p>
-
-          {/* Location Input Accordion */}
-          <div className="mb-16">
-            <Accordion 
-              title="I want to see if it's raining somewhere else" 
-              titleClassName="text-base sm:text-lg font-medium"
-              isOpen={isOpen}
-              onOpenChange={setIsOpen}
-            >
-              <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <input
-                    type="text"
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    placeholder="Enter zip code..."
-                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-card border-card-border
-                             focus:outline-none focus:ring-2 focus:ring-accent"
+          ) : (
+            <>
+              {/* Weather display with image */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                {/* Weather character image */}
+                <div className="relative w-48 h-48 sm:w-80 sm:h-80">
+                  <Image
+                    src={isRaining ? "/rain-cloud.png" : "/sun.png"}
+                    alt={isRaining ? "Rain cloud character" : "Sun character"}
+                    width={320}
+                    height={320}
+                    className="object-contain"
+                    priority
                   />
-                  <button
-                    type="submit"
-                    className="btn-primary w-full sm:w-auto px-4 py-2 rounded-lg font-medium"
-                  >
-                    Is It Raining?
-                  </button>
                 </div>
-                {activeZipCode && (
-                  <button
-                    type="button"
-                    onClick={handleUseMyLocation}
-                    className="text-sm text-accent hover:underline mt-2"
-                  >
-                    Use my location instead
-                  </button>
-                )}
-              </form>
-            </Accordion>
-          </div>
+
+                {/* Weather display - circular */}
+                <div className="weather-display aspect-square w-48 sm:w-64 rounded-full bg-card shadow-lg 
+                              flex flex-col items-center justify-center p-4 sm:p-8">
+                  {error ? (
+                    getErrorMessage()
+                  ) : (
+                    <div className="space-y-2 sm:space-y-4 text-center">
+                      <p className="text-4xl sm:text-6xl font-bold">
+                        {isRaining ? 'YES!' : 'Nope'}
+                      </p>
+                      <p className="text-base sm:text-xl text-muted">
+                        Current conditions: {condition}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Weather Quote */}
+              {!error && (
+                <div className="max-w-md mx-auto">
+                  <blockquote className="italic text-muted bg-white/20 border border-card-border 
+                                      rounded-lg p-6 shadow-sm backdrop-blur-sm">
+                    <p className="text-lg">&ldquo;{randomQuote.text}&rdquo;</p>
+                    <footer className="mt-2 text-sm">— {randomQuote.author}</footer>
+                  </blockquote>
+                </div>
+              )}
+
+              {/* Location info */}
+              <p className="text-sm text-muted flex items-center justify-center gap-2">
+                <span role="img" aria-label="globe">🌍</span>
+                {error ? "Please enter a location" : `${location}`}
+              </p>
+
+              {/* Location Input Accordion */}
+              <div className="mb-16">
+                <Accordion 
+                  title="I want to see if it's raining somewhere else" 
+                  titleClassName="text-base sm:text-lg font-medium"
+                  isOpen={isOpen}
+                  onOpenChange={setIsOpen}
+                >
+                  <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                      <input
+                        type="text"
+                        value={zipCode}
+                        onChange={(e) => setZipCode(e.target.value)}
+                        placeholder="Enter zip code..."
+                        className="w-full sm:w-auto px-4 py-2 rounded-lg bg-card border-card-border
+                                 focus:outline-none focus:ring-2 focus:ring-accent"
+                      />
+                      <button
+                        type="submit"
+                        className="btn-primary w-full sm:w-auto px-4 py-2 rounded-lg font-medium"
+                      >
+                        Is It Raining?
+                      </button>
+                    </div>
+                    {activeZipCode && (
+                      <button
+                        type="button"
+                        onClick={handleUseMyLocation}
+                        className="text-sm text-accent hover:underline mt-2"
+                      >
+                        Use my location instead
+                      </button>
+                    )}
+                  </form>
+                </Accordion>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </main>

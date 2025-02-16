@@ -26,6 +26,18 @@
   --muted: #5b5982;                  /* Muted complement */
 }
 
+/* Loading theme - neutral colors */
+[data-weather="loading"] {
+  --background: #f5f5f5;     /* Neutral light gray */
+  --foreground: #333333;     /* Dark gray text */
+  --card-bg: #ffffff;        /* White cards */
+  --card-border: #e0e0e0;    /* Light gray borders */
+  --accent: #9ca3af;         /* Neutral accent */
+  --button: #d1d5db;         /* Light gray buttons */
+  --button-hover: #9ca3af;   /* Darker gray on hover */
+  --muted: #6b7280;          /* Muted text */
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
