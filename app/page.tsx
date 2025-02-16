@@ -1,6 +1,10 @@
-import Image from "next/image";
+'use client';
+
+import { useGeolocation } from "@/hooks/useGeolocation";
 
 export default function Home() {
+  const { latitude, longitude, error, loading } = useGeolocation();
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="text-center space-y-8">
@@ -10,14 +14,22 @@ export default function Home() {
         
         {/* Weather display placeholder */}
         <div className="weather-display p-12 rounded-lg bg-slate-100 dark:bg-slate-800">
-          <p className="text-2xl">
-            Loading weather data...
-          </p>
+          {loading ? (
+            <p className="text-2xl">Getting your location...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-2xl">Your location:</p>
+              <p className="font-mono">Latitude: {latitude}</p>
+              <p className="font-mono">Longitude: {longitude}</p>
+            </div>
+          )}
         </div>
 
         {/* Location info placeholder */}
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Weather for: Loading location...
+          {loading ? "Detecting location..." : error ? "Location error" : "Location detected!"}
         </p>
       </div>
 
