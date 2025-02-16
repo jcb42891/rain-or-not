@@ -9,6 +9,7 @@ import { AudioPlayer } from '@/components/AudioPlayer';
 import { getRandomQuote } from "@/utils/quotes";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { useMinimumLoadingTime } from "@/hooks/useMinimumLoadingTime";
+import { useCsrf } from "@/hooks/useCsrf";
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -23,10 +24,11 @@ export default function Home() {
     clearLocation,
     getLocation
   } = useGeolocation();
+  const { csrfToken, loading: csrfLoading } = useCsrf();
   const { isRaining, condition, location, error: weatherError, loading: weatherLoading } = 
-    useWeather(latitude, longitude, activeZipCode);
+    useWeather(latitude, longitude, activeZipCode, csrfToken);
 
-  const actualLoading = locationLoading || weatherLoading;
+  const actualLoading = locationLoading || weatherLoading || csrfLoading;
   const loading = useMinimumLoadingTime(actualLoading);
   const error = locationError || weatherError;
 

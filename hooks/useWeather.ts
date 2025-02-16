@@ -13,7 +13,8 @@ interface WeatherData {
 export function useWeather(
   latitude: number | null, 
   longitude: number | null,
-  zipCode?: string
+  zipCode?: string,
+  csrfToken?: string | null
 ) {
   const [weatherData, setWeatherData] = useState<WeatherData>({
     isRaining: false,
@@ -26,7 +27,6 @@ export function useWeather(
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Only fetch if we have location data or zip code
         if (!latitude && !longitude && !zipCode) {
           setWeatherData(prev => ({
             ...prev,
@@ -36,10 +36,20 @@ export function useWeather(
           return;
         }
 
+        if (!csrfToken) {
+          setWeatherData(prev => ({
+            ...prev,
+            loading: false,
+            error: 'Security token not available',
+          }));
+          return;
+        }
+
         const response = await fetch('/api/weather', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken,
           },
           body: JSON.stringify({
             latitude,
@@ -84,7 +94,7 @@ export function useWeather(
     };
 
     fetchWeather();
-  }, [latitude, longitude, zipCode]);
+  }, [latitude, longitude, zipCode, csrfToken]);
 
   return weatherData;
 } 
