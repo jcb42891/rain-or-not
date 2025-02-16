@@ -4,6 +4,7 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { Accordion } from "@/components/Accordion";
+import Image from "next/image";
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -39,27 +40,54 @@ export default function Home() {
       className="min-h-screen flex flex-col items-center justify-center p-8"
       data-weather={weatherTheme}
     >
-      <div className="text-center space-y-8 w-full max-w-xl">
+      <div className="text-center space-y-8 w-full max-w-2xl">
         <h1 className="text-4xl font-bold">
           Is it raining?
         </h1>
         
-        {/* Weather display */}
-        <div className="weather-display p-12 rounded-lg bg-card shadow-lg">
-          {loading ? (
-            <p className="text-2xl">Checking the weather...</p>
-          ) : error ? (
-            <p className="text-accent">{error}</p>
-          ) : (
-            <div className="space-y-4">
-              <p className="text-6xl font-bold">
-                {isRaining ? 'YES!' : 'Nope'}
-              </p>
-              <p className="text-xl text-muted">
-                Current conditions: {condition}
-              </p>
-            </div>
-          )}
+        {/* Weather display with image */}
+        <div className="flex items-center justify-center gap-8">
+          {/* Weather character image */}
+          <div className="relative w-80 h-80">
+            {isRaining ? (
+              <Image
+                src="/rain-cloud.png"
+                alt="Rain cloud character"
+                width={320}
+                height={320}
+                className="object-contain"
+                priority
+              />
+            ) : (
+              <Image
+                src="/sun.png"
+                alt="Sun character"
+                width={320}
+                height={320}
+                className="object-contain"
+                priority
+              />
+            )}
+          </div>
+
+          {/* Weather display - circular */}
+          <div className="weather-display aspect-square w-64 rounded-full bg-card shadow-lg 
+                        flex flex-col items-center justify-center p-8">
+            {loading ? (
+              <p className="text-2xl">Checking the weather...</p>
+            ) : error ? (
+              <p className="text-accent">{error}</p>
+            ) : (
+              <div className="space-y-4 text-center">
+                <p className="text-6xl font-bold">
+                  {isRaining ? 'YES!' : 'Nope'}
+                </p>
+                <p className="text-xl text-muted">
+                  Current conditions: {condition}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Location info */}

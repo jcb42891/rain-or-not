@@ -14,16 +14,16 @@
   --muted: #8f865c;          /* Muted complement */
 }
 
-/* Rainy theme - based on #7f7db8 */
+/* Rainy theme - based on rgb(200, 191, 231) */
 [data-weather="rainy"] {
-  --background: #7f7db8;     /* Base color */
-  --foreground: #2f2d4a;     /* Dark purple complement */
-  --card-bg: #eeeef7;        /* Lighter version of base */
-  --card-border: #6c6aa5;    /* Darker version of base */
-  --accent: #b8ba7d;         /* Complementary yellow */
-  --button: #9593c4;         /* Lighter version of base */
-  --button-hover: #8482b3;   /* Darker version of button */
-  --muted: #5b5982;          /* Muted complement */
+  --background: rgb(200, 191, 231);  /* New base color */
+  --foreground: #2f2d4a;             /* Dark purple complement */
+  --card-bg: #eeeef7;                /* Lighter version of base */
+  --card-border: #c8bfe7;            /* Same as background */
+  --accent: #b8ba7d;                 /* Complementary yellow */
+  --button: #a599d4;                 /* Darker version of base */
+  --button-hover: #8f82c9;           /* Even darker version of button */
+  --muted: #5b5982;                  /* Muted complement */
 }
 
 body {
