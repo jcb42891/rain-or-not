@@ -3,19 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Default theme (sunny) */
+  --background: #f0f9ff;
+  --foreground: #0f172a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark theme (rainy) */
+[data-weather="rainy"] {
+  --background: #1e293b;
+  --foreground: #f8fafc;
+}
+
+/* Cloudy theme */
+[data-weather="cloudy"] {
+  --background: #f1f5f9;
+  --foreground: #334155;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: Arial, Helvetica, sans-serif;
 }
