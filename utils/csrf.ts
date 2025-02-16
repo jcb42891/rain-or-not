@@ -12,7 +12,7 @@ export async function generateToken(): Promise<string> {
 
 export async function setCSRFCookie() {
   const token = await generateToken();
-  const response = NextResponse.next();
+  const response = new NextResponse();
   response.cookies.set({
     name: CSRF_COOKIE_NAME,
     value: token,
