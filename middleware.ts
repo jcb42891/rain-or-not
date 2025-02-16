@@ -27,6 +27,18 @@ function getIP(request: NextRequest) {
   return '127.0.0.1'
 }
 
+function isValidOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get('origin')
+  if (!origin) return false
+
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://rainornot.com',
+  ]
+
+  return allowedOrigins.includes(origin)
+}
+
 export async function middleware(request: NextRequest) {
   // Only apply to weather API route
   if (request.nextUrl.pathname === '/api/weather') {
@@ -39,8 +51,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check origin
-    const origin = request.headers.get('origin')
-    if (!origin || !origin.includes(process.env.NEXT_PUBLIC_SITE_URL || '')) {
+    if (!isValidOrigin(request)) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
