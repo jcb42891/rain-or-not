@@ -2,7 +2,7 @@
 
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useWeather } from "@/hooks/useWeather";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Accordion } from "@/components/Accordion";
 
 export default function Home() {
@@ -16,6 +16,14 @@ export default function Home() {
   const loading = locationLoading || weatherLoading;
   const error = locationError || weatherError;
 
+  // Add weather theme handling
+  const weatherTheme = isRaining ? 'rainy' : 'sunny';
+
+  // Add effect to update document theme
+  useEffect(() => {
+    document.documentElement.dataset.weather = weatherTheme;
+  }, [weatherTheme]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setActiveZipCode(zipCode);
@@ -27,24 +35,27 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+    <main 
+      className="min-h-screen flex flex-col items-center justify-center p-8"
+      data-weather={weatherTheme}
+    >
       <div className="text-center space-y-8 w-full max-w-xl">
         <h1 className="text-4xl font-bold">
           Is it raining?
         </h1>
         
         {/* Weather display */}
-        <div className="weather-display p-12 rounded-lg bg-slate-100 dark:bg-slate-800">
+        <div className="weather-display p-12 rounded-lg bg-card shadow-lg">
           {loading ? (
             <p className="text-2xl">Checking the weather...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-accent">{error}</p>
           ) : (
             <div className="space-y-4">
               <p className="text-6xl font-bold">
                 {isRaining ? 'YES!' : 'Nope'}
               </p>
-              <p className="text-xl">
+              <p className="text-xl text-muted">
                 Current conditions: {condition}
               </p>
             </div>
@@ -52,13 +63,13 @@ export default function Home() {
         </div>
 
         {/* Location info */}
-        <p className="text-sm text-slate-600 dark:text-slate-400">
+        <p className="text-sm text-muted">
           {loading ? (
             "Getting weather data..."
           ) : error ? (
             "Error loading weather"
           ) : (
-            `Weather for: ${location}`
+            `${location}`
           )}
         </p>
 
@@ -71,23 +82,21 @@ export default function Home() {
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 placeholder="Enter zip code..."
-                className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 
-                         bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 
-                         focus:ring-blue-500"
+                className="px-4 py-2 rounded-lg bg-card border-card-border
+                         focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
-                         transition-colors"
+                className="btn-primary px-4 py-2 rounded-lg font-medium"
               >
-                Check Weather
+                Is It Raining?
               </button>
             </div>
             {activeZipCode && (
               <button
                 type="button"
                 onClick={handleUseMyLocation}
-                className="text-sm text-blue-500 hover:underline"
+                className="text-sm text-accent hover:underline"
               >
                 Use my location instead
               </button>
@@ -98,7 +107,7 @@ export default function Home() {
 
       {/* Audio player placeholder */}
       <div className="fixed bottom-4">
-        <p className="text-sm text-slate-500">🎵 Background music controls will go here</p>
+        <p className="text-sm text-muted">🎵 Background music controls will go here</p>
       </div>
     </main>
   );

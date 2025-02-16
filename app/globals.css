@@ -2,27 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Sunny theme (default) - based on #e0cd8b */
 :root {
-  /* Default theme (sunny) */
-  --background: #f0f9ff;
-  --foreground: #0f172a;
+  --background: #e0cd8b;     /* Base color */
+  --foreground: #4a4637;     /* Dark brown complement */
+  --card-bg: #fdf8e7;        /* Lighter version of base */
+  --card-border: #d4bc68;    /* Darker version of base */
+  --accent: #8b9ee0;         /* Complementary blue */
+  --button: #b8a65f;         /* Muted version of base */
+  --button-hover: #9e8c46;   /* Darker version of button */
+  --muted: #8f865c;          /* Muted complement */
 }
 
-/* Dark theme (rainy) */
+/* Rainy theme - based on #7f7db8 */
 [data-weather="rainy"] {
-  --background: #1e293b;
-  --foreground: #f8fafc;
-}
-
-/* Cloudy theme */
-[data-weather="cloudy"] {
-  --background: #f1f5f9;
-  --foreground: #334155;
+  --background: #7f7db8;     /* Base color */
+  --foreground: #2f2d4a;     /* Dark purple complement */
+  --card-bg: #eeeef7;        /* Lighter version of base */
+  --card-border: #6c6aa5;    /* Darker version of base */
+  --accent: #b8ba7d;         /* Complementary yellow */
+  --button: #9593c4;         /* Lighter version of base */
+  --button-hover: #8482b3;   /* Darker version of button */
+  --muted: #5b5982;          /* Muted complement */
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility classes for the new theme colors */
+.bg-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--foreground);  /* Updated for contrast with lighter card bg */
+}
+
+.btn-primary {
+  background-color: var(--button);
+  color: var(--card-bg);     /* Updated for better contrast */
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--button-hover);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+/* Input styling */
+input.bg-card {
+  color: var(--foreground);
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+/* Focus states */
+input:focus {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }

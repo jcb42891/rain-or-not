@@ -14,10 +14,13 @@ export function Accordion({ title, children }: AccordionProps) {
     <div className="w-full">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+        className="w-full flex items-center justify-center gap-2 text-sm text-muted hover:text-foreground"
       >
         <span>{title}</span>
-        <span className="transition-transform duration-200" style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}>
+        <span 
+          className="transition-transform duration-200" 
+          style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}
+        >
           ▼
         </span>
       </button>
