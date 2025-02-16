@@ -14,8 +14,7 @@ export function AudioPlayer({ isRaining }: AudioPlayerProps) {
   );
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-card 
-                    px-3 sm:px-4 py-2 rounded-full shadow-lg max-w-[90%] sm:max-w-none">
+    <div className="flex items-center justify-center gap-4 bg-card px-3 sm:px-4 py-2 rounded-full shadow-lg">
       <button
         onClick={togglePlay}
         className="text-xl sm:text-2xl hover:scale-110 transition-transform"

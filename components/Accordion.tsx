@@ -38,7 +38,7 @@ export function Accordion({
       </button>
       
       <div 
-        className={`transition-all duration-200 overflow-hidden ${isOpen ? 'max-h-40 mt-4' : 'max-h-0'}`}
+        className={`transition-all duration-200 overflow-hidden ${isOpen ? 'max-h-80 mt-4' : 'max-h-0'}`}
       >
         {children}
       </div>
