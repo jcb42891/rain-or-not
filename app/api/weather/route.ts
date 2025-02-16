@@ -15,14 +15,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await fetch(
-      `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${query}`,
-      { cache: 'no-store' }
-    );
+    const url = `https://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${query}`;
+    console.log('Fetching weather:', { url, query });
 
+    const response = await fetch(url, { cache: 'no-store' });
+    
     if (!response.ok) {
+      const errorData = await response.text();
+      console.log('Weather API error:', { 
+        status: response.status, 
+        error: errorData 
+      });
       return NextResponse.json(
-        { error: 'Weather data fetch failed' },
+        { error: 'Weather data fetch failed', details: errorData },
         { status: response.status }
       );
     }
