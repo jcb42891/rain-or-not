@@ -29,11 +29,19 @@ function getIP(request: NextRequest) {
 
 function isValidOrigin(request: NextRequest): boolean {
   const origin = request.headers.get('origin')
+  const host = request.headers.get('host')
   
+  // Debug logging
+  console.log({
+    origin,
+    host,
+    headers: Object.fromEntries(request.headers.entries()),
+    url: request.url,
+    method: request.method,
+  });
+
   // Allow requests without origin header in production
-  // This handles direct API calls from the same domain
   if (!origin) {
-    const host = request.headers.get('host')
     return host === 'rainornot.com' || host === 'localhost:3000'
   }
 
@@ -42,7 +50,10 @@ function isValidOrigin(request: NextRequest): boolean {
     'https://rainornot.com',
   ]
 
-  return allowedOrigins.includes(origin)
+  const isAllowed = allowedOrigins.includes(origin)
+  console.log({ isAllowed, origin, allowedOrigins });
+
+  return isAllowed
 }
 
 export async function middleware(request: NextRequest) {
@@ -50,6 +61,7 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === '/api/weather') {
     // Check if it's a POST request
     if (request.method !== 'POST') {
+      console.log('Method not allowed:', request.method);
       return NextResponse.json(
         { error: 'Method not allowed' },
         { status: 405 }
@@ -57,7 +69,9 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check origin
-    if (!isValidOrigin(request)) {
+    const originValid = isValidOrigin(request)
+    if (!originValid) {
+      console.log('Origin validation failed');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
