@@ -42,12 +42,12 @@ function isValidOrigin(request: NextRequest): boolean {
 
   // Allow requests without origin header in production
   if (!origin) {
-    return host === 'rainornot.com' || host === 'localhost:3000'
+    return host === 'www.rainornot.com' || host === 'localhost:3000'
   }
 
   const allowedOrigins = [
     'http://localhost:3000',
-    'https://rainornot.com',
+    'https://www.rainornot.com',
   ]
 
   const isAllowed = allowedOrigins.includes(origin)
