@@ -95,6 +95,10 @@ export async function middleware(request: NextRequest) {
 
     // Validate CSRF token
     if (!validateCSRFToken(request)) {
+      console.log('CSRF validation failed', {
+        headers: Object.fromEntries(request.headers.entries()),
+        cookies: request.cookies.getAll(),
+      });
       return NextResponse.json(
         { error: 'Invalid CSRF token' },
         { status: 403 }
