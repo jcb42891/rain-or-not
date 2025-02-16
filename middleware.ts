@@ -94,7 +94,10 @@ export async function middleware(request: NextRequest) {
     rateLimit.set(ip, [...recentRequests, now])
 
     // Validate CSRF token
-    if (!validateCSRFToken(request)) {
+    const csrfValid = validateCSRFToken(request);
+    console.log('CSRF validation result:', { csrfValid });
+
+    if (!csrfValid) {
       console.log('CSRF validation failed', {
         headers: Object.fromEntries(request.headers.entries()),
         cookies: request.cookies.getAll(),
