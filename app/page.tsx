@@ -5,6 +5,7 @@ import { useWeather } from "@/hooks/useWeather";
 import { useState, useEffect } from "react";
 import { Accordion } from "@/components/Accordion";
 import Image from "next/image";
+import { AudioPlayer } from '@/components/AudioPlayer';
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -133,10 +134,8 @@ export default function Home() {
         </Accordion>
       </div>
 
-      {/* Audio player placeholder */}
-      <div className="fixed bottom-4">
-        <p className="text-sm text-muted">🎵 Background music controls will go here</p>
-      </div>
+      {/* Replace audio placeholder with actual player */}
+      <AudioPlayer isRaining={isRaining} />
     </main>
   );
 }

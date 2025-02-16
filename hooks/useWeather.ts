@@ -54,6 +54,7 @@ export function useWeather(
           'drizzle',
           'shower',
           'sleet',
+          'mist',
         ];
         
         const isRaining = rainConditions.some(condition => 
