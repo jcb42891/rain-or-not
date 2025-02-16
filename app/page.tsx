@@ -84,25 +84,32 @@ export default function Home() {
   const getErrorMessage = () => {
     if (locationError) {
       return (
-        <div className="space-y-2">
-          <p className="text-accent">Unable to get your location</p>
-          <p className="text-sm">
-            Please enable location access in your browser settings or use the input below to enter a location manually
+        <div className="space-y-3 p-2 text-center">
+          <p className="text-lg font-medium text-accent">
+            Location access needed
+          </p>
+          <p className="text-base">
+            Please enable location access or enter a zip code below
           </p>
           <button
             onClick={() => setIsOpen(true)}
-            className="text-sm text-accent hover:underline mt-2"
+            className="text-accent hover:underline mt-1 text-base inline-flex items-center gap-1"
           >
-            Enter location manually →
+            Enter zip code
+            <span aria-hidden="true">→</span>
           </button>
         </div>
       );
     }
     if (weatherError) {
       return (
-        <div className="space-y-2">
-          <p className="text-accent">Unable to get weather data</p>
-          <p className="text-sm">Please try again in a moment</p>
+        <div className="space-y-3 p-2">
+          <p className="text-lg font-medium text-accent">
+            Unable to get weather data
+          </p>
+          <p className="text-base">
+            Please try again in a moment
+          </p>
         </div>
       );
     }
@@ -157,9 +164,11 @@ export default function Home() {
 
                 {/* Weather display - circular */}
                 <div className="weather-display aspect-square w-48 sm:w-64 rounded-full bg-card shadow-lg 
-                              flex flex-col items-center justify-center p-4 sm:p-8">
+                              flex items-center justify-center">
                   {error ? (
-                    getErrorMessage()
+                    <div className="w-full px-3 sm:px-4">
+                      {getErrorMessage()}
+                    </div>
                   ) : (
                     <div className="space-y-2 sm:space-y-4 text-center">
                       <p className="text-4xl sm:text-6xl font-bold">
@@ -185,10 +194,20 @@ export default function Home() {
               )}
 
               {/* Location info */}
-              <p className="text-sm text-muted flex items-center justify-center gap-2">
-                <span role="img" aria-label="globe">🌍</span>
-                {error ? "Please enter a location" : `${location}`}
-              </p>
+              {error ? (
+                <button 
+                  onClick={() => setIsOpen(true)}
+                  className="text-sm text-muted hover:text-accent inline-flex items-center gap-2 transition-colors mx-auto"
+                >
+                  <span role="img" aria-label="globe">🌍</span>
+                  Please enter a location
+                </button>
+              ) : (
+                <p className="text-sm text-muted flex items-center justify-center gap-2">
+                  <span role="img" aria-label="globe">🌍</span>
+                  {location}
+                </p>
+              )}
 
               {/* Location Input Accordion */}
               <div className="mb-16">
