@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { Accordion } from "@/components/Accordion";
 import Image from "next/image";
 import { AudioPlayer } from '@/components/AudioPlayer';
-import { Globe2 } from 'lucide-react';
 import { getRandomQuote } from "@/utils/quotes";
 
 export default function Home() {
@@ -143,7 +142,7 @@ export default function Home() {
             <div className="max-w-md mx-auto">
               <blockquote className="italic text-muted bg-white/20 border border-card-border 
                                     rounded-lg p-6 shadow-sm backdrop-blur-sm">
-                <p className="text-lg">"{randomQuote.text}"</p>
+                <p className="text-lg">&ldquo;{randomQuote.text}&rdquo;</p>
                 <footer className="mt-2 text-sm">— {randomQuote.author}</footer>
               </blockquote>
             </div>
