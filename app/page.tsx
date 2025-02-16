@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Accordion } from "@/components/Accordion";
 import Image from "next/image";
 import { AudioPlayer } from '@/components/AudioPlayer';
+import { Globe2 } from 'lucide-react';
 
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
@@ -42,7 +43,7 @@ export default function Home() {
       data-weather={weatherTheme}
     >
       <div className="text-center space-y-8 w-full max-w-2xl">
-        <h1 className="text-4xl font-bold">
+        <h1 className="text-6xl font-bold tracking-tight">
           Is it raining?
         </h1>
         
@@ -91,8 +92,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Location info */}
-        <p className="text-sm text-muted">
+        {/* Location info with globe emoji */}
+        <p className="text-sm text-muted flex items-center justify-center gap-2">
+          <span role="img" aria-label="globe">🌍</span>
           {loading ? (
             "Getting weather data..."
           ) : error ? (
@@ -102,8 +104,8 @@ export default function Home() {
           )}
         </p>
 
-        {/* Location Input Accordion */}
-        <Accordion title="I want to see if it's raining somewhere else">
+        {/* Location Input Accordion with larger text */}
+        <Accordion title="I want to see if it's raining somewhere else" titleClassName="text-lg font-medium">
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
             <div className="flex gap-2">
               <input

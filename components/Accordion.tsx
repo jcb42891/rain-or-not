@@ -5,16 +5,17 @@ import { useState } from 'react';
 interface AccordionProps {
   title: string;
   children: React.ReactNode;
+  titleClassName?: string;
 }
 
-export function Accordion({ title, children }: AccordionProps) {
+export function Accordion({ title, children, titleClassName = '' }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="w-full">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-center gap-2 text-sm text-muted hover:text-foreground"
+        className={`w-full flex items-center justify-center gap-2 text-muted hover:text-foreground ${titleClassName}`}
       >
         <span>{title}</span>
         <span 
