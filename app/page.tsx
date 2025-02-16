@@ -39,18 +39,18 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-screen flex flex-col items-center justify-center p-8"
+      className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8"
       data-weather={weatherTheme}
     >
-      <div className="text-center space-y-8 w-full max-w-2xl">
-        <h1 className="text-6xl font-bold tracking-tight">
+      <div className="text-center space-y-6 sm:space-y-8 w-full max-w-2xl">
+        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight">
           Is it raining?
         </h1>
         
         {/* Weather display with image */}
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
           {/* Weather character image */}
-          <div className="relative w-80 h-80">
+          <div className="relative w-48 h-48 sm:w-80 sm:h-80">
             {isRaining ? (
               <Image
                 src="/rain-cloud.png"
@@ -73,18 +73,18 @@ export default function Home() {
           </div>
 
           {/* Weather display - circular */}
-          <div className="weather-display aspect-square w-64 rounded-full bg-card shadow-lg 
-                        flex flex-col items-center justify-center p-8">
+          <div className="weather-display aspect-square w-48 sm:w-64 rounded-full bg-card shadow-lg 
+                        flex flex-col items-center justify-center p-4 sm:p-8">
             {loading ? (
-              <p className="text-2xl">Checking the weather...</p>
+              <p className="text-xl sm:text-2xl">Checking the weather...</p>
             ) : error ? (
               <p className="text-accent">{error}</p>
             ) : (
-              <div className="space-y-4 text-center">
-                <p className="text-6xl font-bold">
+              <div className="space-y-2 sm:space-y-4 text-center">
+                <p className="text-4xl sm:text-6xl font-bold">
                   {isRaining ? 'YES!' : 'Nope'}
                 </p>
-                <p className="text-xl text-muted">
+                <p className="text-base sm:text-xl text-muted">
                   Current conditions: {condition}
                 </p>
               </div>
@@ -104,21 +104,24 @@ export default function Home() {
           )}
         </p>
 
-        {/* Location Input Accordion with larger text */}
-        <Accordion title="I want to see if it's raining somewhere else" titleClassName="text-lg font-medium">
+        {/* Location Input Accordion */}
+        <Accordion 
+          title="I want to see if it's raining somewhere else" 
+          titleClassName="text-base sm:text-lg font-medium"
+        >
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <input
                 type="text"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 placeholder="Enter zip code..."
-                className="px-4 py-2 rounded-lg bg-card border-card-border
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-card border-card-border
                          focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <button
                 type="submit"
-                className="btn-primary px-4 py-2 rounded-lg font-medium"
+                className="btn-primary w-full sm:w-auto px-4 py-2 rounded-lg font-medium"
               >
                 Is It Raining?
               </button>
@@ -127,7 +130,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={handleUseMyLocation}
-                className="text-sm text-accent hover:underline"
+                className="text-sm text-accent hover:underline mt-2"
               >
                 Use my location instead
               </button>
@@ -136,7 +139,7 @@ export default function Home() {
         </Accordion>
       </div>
 
-      {/* Replace audio placeholder with actual player */}
+      {/* Audio player */}
       <AudioPlayer isRaining={isRaining} />
     </main>
   );
