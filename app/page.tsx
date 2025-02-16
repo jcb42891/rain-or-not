@@ -14,7 +14,13 @@ export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
   const [activeZipCode, setActiveZipCode] = useState<string>('');
   
-  const { latitude, longitude, error: locationError, loading: locationLoading } = useGeolocation();
+  const { 
+    latitude, 
+    longitude, 
+    error: locationError, 
+    loading: locationLoading,
+    clearLocation 
+  } = useGeolocation();
   const { isRaining, condition, location, error: weatherError, loading: weatherLoading } = 
     useWeather(latitude, longitude, activeZipCode);
 
@@ -32,6 +38,7 @@ export default function Home() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    clearLocation(); // Clear location data when using zip code
     setActiveZipCode(zipCode);
   };
 
