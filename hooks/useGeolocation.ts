@@ -43,5 +43,12 @@ export function useGeolocation() {
     getLocation();
   }, []);
 
-  return { latitude, longitude, error, loading, clearLocation };
+  return { 
+    latitude, 
+    longitude, 
+    error, 
+    loading, 
+    clearLocation,
+    getLocation  // Expose the getLocation function
+  };
 } 

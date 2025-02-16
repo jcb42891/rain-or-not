@@ -13,13 +13,15 @@ import { useMinimumLoadingTime } from "@/hooks/useMinimumLoadingTime";
 export default function Home() {
   const [zipCode, setZipCode] = useState<string>('');
   const [activeZipCode, setActiveZipCode] = useState<string>('');
+  const [zipCodeError, setZipCodeError] = useState<string>('');
   
   const { 
     latitude, 
     longitude, 
     error: locationError, 
     loading: locationLoading,
-    clearLocation 
+    clearLocation,
+    getLocation
   } = useGeolocation();
   const { isRaining, condition, location, error: weatherError, loading: weatherLoading } = 
     useWeather(latitude, longitude, activeZipCode);
@@ -36,15 +38,44 @@ export default function Home() {
     document.documentElement.dataset.weather = weatherTheme;
   }, [weatherTheme]);
 
+  // Zip code validation function
+  const validateZipCode = (zip: string) => {
+    // US zip code regex pattern (5 digits or 5+4 format)
+    const zipRegex = /^\d{5}(-\d{4})?$/;
+    if (!zip) {
+      return 'Please enter a zip code';
+    }
+    if (!zipRegex.test(zip)) {
+      return 'Please enter a valid US zip code';
+    }
+    return '';
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    clearLocation(); // Clear location data when using zip code
+    const error = validateZipCode(zipCode);
+    if (error) {
+      setZipCodeError(error);
+      return;
+    }
+    setZipCodeError('');
+    clearLocation();
     setActiveZipCode(zipCode);
+  };
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setZipCode(value);
+    // Clear error when user starts typing
+    if (zipCodeError) {
+      setZipCodeError('');
+    }
   };
 
   const handleUseMyLocation = () => {
     setZipCode('');
     setActiveZipCode('');
+    getLocation();
   };
 
   // Helper function to get user-friendly error message
@@ -167,14 +198,27 @@ export default function Home() {
                 >
                   <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
                     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                      <input
-                        type="text"
-                        value={zipCode}
-                        onChange={(e) => setZipCode(e.target.value)}
-                        placeholder="Enter zip code..."
-                        className="w-full sm:w-auto px-4 py-2 rounded-lg bg-card border-card-border
-                                 focus:outline-none focus:ring-2 focus:ring-accent"
-                      />
+                      <div className="flex flex-col w-full sm:w-auto">
+                        <input
+                          type="text"
+                          value={zipCode}
+                          onChange={handleZipCodeChange}
+                          placeholder="Enter zip code..."
+                          className={`w-full sm:w-auto px-4 py-2 rounded-lg bg-card border-card-border
+                                     focus:outline-none focus:ring-2 focus:ring-accent
+                                     ${zipCodeError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                          aria-invalid={!!zipCodeError}
+                          aria-describedby={zipCodeError ? "zipcode-error" : undefined}
+                        />
+                        {zipCodeError && (
+                          <p 
+                            id="zipcode-error"
+                            className="text-sm text-red-500 mt-1"
+                          >
+                            {zipCodeError}
+                          </p>
+                        )}
+                      </div>
                       <button
                         type="submit"
                         className="btn-primary w-full sm:w-auto px-4 py-2 rounded-lg font-medium"
