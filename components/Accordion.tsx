@@ -6,10 +6,21 @@ interface AccordionProps {
   title: string;
   children: React.ReactNode;
   titleClassName?: string;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
-export function Accordion({ title, children, titleClassName = '' }: AccordionProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function Accordion({ 
+  title, 
+  children, 
+  titleClassName = '',
+  isOpen: controlledIsOpen,
+  onOpenChange,
+}: AccordionProps) {
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
+  
+  const isOpen = controlledIsOpen ?? uncontrolledIsOpen;
+  const setIsOpen = onOpenChange ?? setUncontrolledIsOpen;
 
   return (
     <div className="w-full">

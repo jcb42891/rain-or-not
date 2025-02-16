@@ -37,6 +37,38 @@ export default function Home() {
     setActiveZipCode('');
   };
 
+  // Helper function to get user-friendly error message
+  const getErrorMessage = () => {
+    if (locationError) {
+      return (
+        <div className="space-y-2">
+          <p className="text-accent">Unable to get your location</p>
+          <p className="text-sm">
+            Please enable location access in your browser settings or use the input below to enter a location manually
+          </p>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="text-sm text-accent hover:underline mt-2"
+          >
+            Enter location manually →
+          </button>
+        </div>
+      );
+    }
+    if (weatherError) {
+      return (
+        <div className="space-y-2">
+          <p className="text-accent">Unable to get weather data</p>
+          <p className="text-sm">Please try again in a moment</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // State for accordion
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <main 
       className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8"
@@ -78,7 +110,7 @@ export default function Home() {
             {loading ? (
               <p className="text-xl sm:text-2xl">Checking the weather...</p>
             ) : error ? (
-              <p className="text-accent">{error}</p>
+              getErrorMessage()
             ) : (
               <div className="space-y-2 sm:space-y-4 text-center">
                 <p className="text-4xl sm:text-6xl font-bold">
@@ -98,7 +130,7 @@ export default function Home() {
           {loading ? (
             "Getting weather data..."
           ) : error ? (
-            "Error loading weather"
+            "Please enter a location"
           ) : (
             `${location}`
           )}
@@ -108,6 +140,8 @@ export default function Home() {
         <Accordion 
           title="I want to see if it's raining somewhere else" 
           titleClassName="text-base sm:text-lg font-medium"
+          isOpen={isOpen}
+          onOpenChange={setIsOpen}
         >
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
