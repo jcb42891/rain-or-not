@@ -10,8 +10,8 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Weather App',
-    template: '%s | Weather App'
+    default: 'Rain Or Not',
+    template: '%s | Rain Or Not'
   },
   description: 'Get real-time weather updates for your location',
   keywords: ['weather', 'forecast', 'local weather', 'real-time weather'],
